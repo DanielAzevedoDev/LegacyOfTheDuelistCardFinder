@@ -72,7 +72,7 @@
       .then((res) => {
         return res.json();
       })
-      .then((data) => setPokedex(data));
+      .then((data) => setPokedex(data.data));
     //extrcact only the English names and convert to lowerCase
     function setPokedex(dex) {
       console.log(dex);
