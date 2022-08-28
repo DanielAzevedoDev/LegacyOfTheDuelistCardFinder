@@ -68,13 +68,14 @@
 
     var pokedex = [];
     //fetch every pokemon basic data
-    fetch("pokedex.json",{mode: 'cors'})
+    fetch("cards.json",{mode: 'cors'})
       .then((res) => {
         return res.json();
       })
       .then((data) => setPokedex(data));
     //extrcact only the English names and convert to lowerCase
     function setPokedex(dex) {
+      console.log(dex);
       for (let pokemon of dex) {
         pokedex.push(pokemon.name.english.toLowerCase());
       }
