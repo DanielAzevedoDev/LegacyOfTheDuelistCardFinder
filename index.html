@@ -66,22 +66,31 @@
   <script src="index.js"></script>
   <script type="text/javascript">
 
-    var pokedex = [];
+    var cards = [];
     //fetch every pokemon basic data
-    fetch("cards.json",{mode: 'cors'})
+    fetch("cards.json", { mode: 'cors' })
       .then((res) => {
         return res.json();
       })
       .then((data) => setPokedex(data.data));
     //extrcact only the English names and convert to lowerCase
-    function setPokedex(dex) {
-      console.log(dex);
+    function setPokedex(list) {
+      console.log(list);
       debugger;
-      for (let pokemon of dex) {
-        pokedex.push(pokemon.name.english.toLowerCase());
+      for (let card of list) {
+        cards.push(card);
       }
     }
-
+    
+    function findInList(list, name) {
+      var foundItems = [];
+      for (let item of list) {
+        if (item.name.toLocaleLowerCase().search(name))
+          foundItems.push(item);
+      }
+      return foundItems;
+    }
+    
     //find combinations
     let findPermutations = (string) => {
       if (!string || typeof string !== "string") {
@@ -118,13 +127,13 @@
       //trey to show a loading animation
       loadPlace = document.getElementById("load");
       loadPlace.append('<div class="spinner-border" role="status"> <span class="sr-only">Loading...</span></div>');
-      
+
       //clear the list
       list.innerHTML = '';
 
       //get permutations
-      wordList = findPermutations(word);
-      console.log(wordList);
+      //wordList = findPermutations(word);
+        console.log(wordList);
 
       //get only the unique in case of repeated letters
       const unique = Array.from(new Set(wordList));
@@ -137,7 +146,7 @@
           //but quickly realized that the list could be massive
           //and since i'm lazy and terrible with front-end i left the list is :)
           //if exists in pokedex, add 
-          if (pokedex.indexOf(element) >= 0) {
+          if (cards.indexOf(element) >= 0) {
             var li = document.createElement("li");
             li.appendChild(document.createTextNode(element));
             li.classList.add("list-group-item");
@@ -150,6 +159,48 @@
       //remove loading animation
       loadPlace.innerHTML = '';
     }
+  
+    function procurar(){
+      //get HTML elements
+      word = document.getElementById("misteryWord").value;
+      list = document.getElementById("nameList");
+
+      //trey to show a loading animation
+      loadPlace = document.getElementById("load");
+      loadPlace.append('<div class="spinner-border" role="status"> <span class="sr-only">Loading...</span></div>');
+
+      //clear the list
+      list.innerHTML = '';
+
+      //get cards
+      wordList = findInList(cards,word);
+        console.log(wordList);
+
+      //get only the unique in case of repeated letters
+      const unique = Array.from(new Set(wordList));
+
+      //compare generated words with pokedex
+      for (const element of unique) {
+        if (element.length == word.length) {
+          var res;
+          //Dev Note: Inittialy i planned to list every generated word on screen, 
+          //but quickly realized that the list could be massive
+          //and since i'm lazy and terrible with front-end i left the list is :)
+          //if exists in pokedex, add 
+          if (cards.indexOf(element) >= 0) {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(element));
+            li.classList.add("list-group-item");
+            list.appendChild(li);
+          }
+
+        }
+
+      }
+      //remove loading animation
+      loadPlace.innerHTML = '';
+    }
+
   </script>
   <div class="container">
     <div class="jumbotron">
@@ -164,7 +215,7 @@
       </ul>
       <p>More info</p>
       <p class="lead">
-        <a class="btn btn-primary btn-lg" style="color: white;" role="button" onclick="baralhar()">Jumbo action name</a>
+        <a class="btn btn-primary btn-lg" style="color: white; display: none;" role="button" onclick="procurar()">Procurar Carta</a>
       </p>
       <div id="load"></div>
     </div>
